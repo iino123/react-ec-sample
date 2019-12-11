@@ -10,6 +10,22 @@
   background-position: center;
   background-size: cover;
 
+  // NOTE: 子要素の背景画像が拡大した際に親要素も拡大してしまう現状を防ぐ
+  overflow: hidden;
+
+  &:hover {
+    cursor: pointer;
+
+    & .background-image {
+      transform: scale(1.1);
+      transition: transform 6s cubic-bezier(0.25, 0.45, 0.45, 0.95);
+    }
+
+    & .content {
+      opacity: 0.9;
+    }
+  }
+
   &.large {
     height: 380px;
   }
@@ -22,6 +38,13 @@
     margin-left: 7.5px;
   }
 
+  .background-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+  }
+
   .content {
     height: 90px;
     padding: 0 25px;
@@ -32,6 +55,9 @@
     border: 1px solid black;
     background-color: white;
     opacity: 0.7;
+
+    // NOTE: 背景画像とこの要素がhtml上では同じ階層にあるが、このabsoluteによって背景画像の中心に配置される
+    position: absolute;
 
     .title {
       font-weight: bold;
