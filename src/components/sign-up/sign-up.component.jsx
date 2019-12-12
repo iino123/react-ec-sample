@@ -35,6 +35,8 @@ class SignUp extends React.Component {
         password
       );
 
+      // NOTE: google-sign-inの場合は認証完了の時点でdisplayNameがセットされているが、emailサインアップの場合はセットされない
+      // -> displayNameはadditionalDataとしてセットする
       await createUserProfileDocument(user, { displayName });
 
       // sign-up後にsign-upフォームを初期化する
