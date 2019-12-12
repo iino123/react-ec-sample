@@ -13,6 +13,37 @@ const config = {
   measurementId: "G-HK7V7XC58Z"
 };
 
+// 認証時にfirestoreのレコードを作成
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+
+  // snapShotを取り出す際はpromiseが返却される
+  const snapShot = await userRef.get();
+
+  /* memo:
+  get時は、reference -> snapShot -> dataの順に取り出す
+  insert時はreferenceに対してset(),add()を使う
+   */
+  // 既にfirestoreに登録済みの場合は新しいdocumentを作成しない
+  if (!snapShot.exists) {
+    const { displayName, email } = userAuth;
+    const createAt = new Date();
+    try {
+      await userRef.set({
+        displayName,
+        email,
+        createAt,
+        ...additionalData
+      });
+    } catch (error) {
+      console.log("error createing user", error.message);
+    }
+  }
+
+  return userRef;
+};
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
