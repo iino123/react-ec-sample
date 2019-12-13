@@ -20,7 +20,6 @@ const mapStateToDispatch = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  // itemCountはstateが変化した時(userなど関係ないものなどでも)、再計算される->パフォーマンスに問題あり。
   itemCount: selectCartItemsCount(state)
 });
 
