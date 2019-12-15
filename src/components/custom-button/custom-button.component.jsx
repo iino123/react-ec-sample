@@ -1,19 +1,10 @@
 import React from "react";
-import "./custom-button.style.scss";
+import { CustomButtonContainer } from "./custom-button.styles";
 
-const CustomButton = ({
-  children,
-  inverted,
-  isGoogleSignIn,
-  ...otherProps
-}) => (
-  <button
-    className={`${inverted ? "inverted" : ""} 
-    ${isGoogleSignIn ? "google-sign-in" : ""} custom-button`}
-    {...otherProps}
-  >
-    {children}
-  </button>
+// NOTE: styled-componentのカスタムタグにhtml属性を与えると反映される(type='submit'など)
+// 今回の場合は...propsの部分にhtmlタグやstyled-componentに渡したい変数が格納される可能性があるが正常に処理される
+const CustomButton = ({ children, ...props }) => (
+  <CustomButtonContainer {...props}>{children}</CustomButtonContainer>
 );
 
 export default CustomButton;
