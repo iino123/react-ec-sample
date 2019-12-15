@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-export const HeaderContainner = styled.div`
+export const HeaderContainer = styled.div`
   height: 70px;
   width: 100%;
   display: flex;
@@ -9,7 +9,7 @@ export const HeaderContainner = styled.div`
   margin-bottom: 25px;
 `;
 
-export const LogoCantainer = styled(Link)`
+export const LogoContainer = styled(Link)`
   height: 100%;
   width: 70px;
   padding: 25px;
