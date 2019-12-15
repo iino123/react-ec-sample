@@ -12,7 +12,13 @@ import CheckoutPage from "./pages/checkout/checkout.component";
 import Header from "./components/header/header.component.jsx";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx";
 
-import { auth, createUserProfileDocument } from "./firebase/firebase.util";
+import { selectShopCollectionsForPreview } from "./redux/shop/shop.selector";
+
+import {
+  auth,
+  createUserProfileDocument,
+  addCollectionAndDocuments
+} from "./firebase/firebase.util";
 import { setCurrentUser } from "./redux/user/user.actions";
 
 import { selectCurrentUser } from "./redux/user/user.selectors";
@@ -23,9 +29,8 @@ class App extends React.Component {
 
   componentDidMount() {
     // TODO: 確認 下記の定数宣言を1つ上の階層でしたらエラーとなるがなぜ...
-    const { setCurrentUser } = this.props;
+    const { setCurrentUser, collectionsArray } = this.props;
 
-    // const { setCurrentUser } = this.props;
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
@@ -39,17 +44,12 @@ class App extends React.Component {
         // TODO:確認 個人的には下記のように記述しても良いと思うが、上記のようにonSnapshot()を使ってdocumentの変更をリッスンする必要はあるのか？
         // const snapShot = await userRef.get();
         // const data = snapShot.data();
-        // setCurrentUser(
-        //   {
-        //     id: snapShot.id,
-        //     ...data
-        //   },
-        //   () => console.log(this.state)
-        // );
       } else {
         setCurrentUser(userAuth);
       }
     });
+    console.log(collectionsArray);
+    addCollectionAndDocuments("collections", collectionsArray);
   }
 
   // TODO: 確認 → componentがマウントされていない時のメモリリークを引き起こすのを防ぐためらしい
@@ -82,7 +82,8 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  collectionsArray: selectShopCollectionsForPreview
 });
 
 const mapDispatchToProps = dispatch => ({

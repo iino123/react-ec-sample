@@ -44,6 +44,22 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
+export const addCollectionAndDocuments = async (collectionKey, objectToAdd) => {
+  const collectionRef = firestore.collection(collectionKey);
+  console.log(collectionKey);
+  console.log(objectToAdd);
+  const batch = firestore.batch();
+
+  objectToAdd.forEach(obj => {
+    // collectionRef.doc();によってfirestoreがdocumentの一意のIDを生成する
+    // collectionRef.doc(title)のように引数を与えた場合は、与えた引数がIDとなる
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, obj);
+  });
+
+  return await batch.commit();
+};
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
