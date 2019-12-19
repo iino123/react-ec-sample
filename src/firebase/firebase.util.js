@@ -76,6 +76,16 @@ export const convertColledctionsSnapshotToMap = collections => {
   }, {});
 };
 
+// TODO: このコードの意味がわからんので、promiseに関してもう一度復習。
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsbscribe = auth.onAuthStateChanged(userAuth => {
+      unsbscribe();
+      resolve(userAuth);
+    }, reject);
+  });
+};
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
