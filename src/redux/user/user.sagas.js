@@ -83,7 +83,7 @@ export function* onSignOutStart() {
   yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
 }
 
-export function* userSagas() {
+export default function* userSagas() {
   yield all([
     call(onGoogleSignInStart),
     call(onEmailSignInStart),
