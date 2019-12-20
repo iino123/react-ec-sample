@@ -17,7 +17,7 @@ import { checkUserSession } from "./redux/user/user.actions";
 
 class App extends React.Component {
   // TODO: なぜこれはletをつけないのか? -> class内なのでつける必要がない?
-  unsubscribeFromAuth = null;
+  // unsubscribeFromAuth = null;
 
   componentDidMount() {
     const { checkUserSession } = this.props;
@@ -25,9 +25,9 @@ class App extends React.Component {
   }
 
   // TODO: 確認 → componentがマウントされていない時のメモリリークを引き起こすのを防ぐためらしい
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
+  // componentWillUnmount() {
+  //   this.unsubscribeFromAuth();
+  // }
 
   render() {
     return (
