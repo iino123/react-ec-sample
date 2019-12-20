@@ -1,9 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
+
+import { emailSignUpStart } from "../../redux/user/user.actions.js";
 
 import FormInput from "../form-input/form-input.component";
 import CustomButton from "../custom-button/custom-button.component";
-
-import { auth, createUserProfileDocument } from "../../firebase/firebase.util";
 
 import "./sign-up.style.scss";
 
@@ -27,28 +28,11 @@ class SignUp extends React.Component {
       alert("password don't match ");
       return;
     }
-
-    try {
-      // TODO: 確認 userのkeyをもつobjectが返却されること
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-
-      // NOTE: google-sign-inの場合は認証完了の時点でdisplayNameがセットされているが、emailサインアップの場合はセットされない
-      // -> displayNameはadditionalDataとしてセットする
-      await createUserProfileDocument(user, { displayName });
-
-      // sign-up後にsign-upフォームを初期化する
-      this.setState({
-        displayName: "",
-        email: "",
-        password: "",
-        confirmPassword: ""
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    const { emailSignUpStart } = this.props;
+    emailSignUpStart(email, password, displayName);
+    // NOTE: 元々はサインアップ完了後にstateを初期化していたが、
+    // 現在はサインアップ後に別ページに遷移するためstateの初期化は必要ない。
+    // (次回サインアップページに訪れた場合はconstructorによってstateの初期化処理が走るため)
   };
 
   handleChange = event => {
@@ -106,4 +90,9 @@ class SignUp extends React.Component {
   }
 }
 
-export default SignUp;
+const mapDispatchToProps = dispatch => ({
+  emailSignUpStart: (email, password, displayName) =>
+    dispatch(emailSignUpStart({ email, password, displayName }))
+});
+
+export default connect(null, mapDispatchToProps)(SignUp);

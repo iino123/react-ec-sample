@@ -12,36 +12,16 @@ import CheckoutPage from "./pages/checkout/checkout.component";
 import Header from "./components/header/header.component.jsx";
 import SignInAndSignUpPage from "./pages/sign-in-and-sign-up/sign-in-and-sign-up.component.jsx";
 
-import { auth, createUserProfileDocument } from "./firebase/firebase.util";
-import { setCurrentUser } from "./redux/user/user.actions";
-
 import { selectCurrentUser } from "./redux/user/user.selectors";
+import { checkUserSession } from "./redux/user/user.actions";
 
 class App extends React.Component {
   // TODO: なぜこれはletをつけないのか? -> class内なのでつける必要がない?
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    // TODO: 確認 下記の定数宣言を1つ上の階層でしたらエラーとなるがなぜ...
-    const { setCurrentUser } = this.props;
-
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
-        // NOTE: referenceからは直接データを参照できない
-        userRef.onSnapshot(snapShot => {
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data()
-          });
-        });
-        // TODO:確認 個人的には下記のように記述しても良いと思うが、上記のようにonSnapshot()を使ってdocumentの変更をリッスンする必要はあるのか？
-        // const snapShot = await userRef.get();
-        // const data = snapShot.data();
-      } else {
-        setCurrentUser(userAuth);
-      }
-    });
+    const { checkUserSession } = this.props;
+    checkUserSession();
   }
 
   // TODO: 確認 → componentがマウントされていない時のメモリリークを引き起こすのを防ぐためらしい
@@ -78,7 +58,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  checkUserSession: () => dispatch(checkUserSession())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
